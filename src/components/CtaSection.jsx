@@ -9,7 +9,7 @@ const CtaSection = ({ silent = false, goHomeOnClose = true, homePath = "/" }) =>
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(!silent);
   const [loading, setLoading] = useState(true);
-  const hasSubmittedRef = useRef(false);
+  const hasSubmittedRef = useRef(false); // prevent multiple submissions in same session
 
   const [formData, setFormData] = useState({
     name: "",
@@ -18,6 +18,7 @@ const CtaSection = ({ silent = false, goHomeOnClose = true, homePath = "/" }) =>
     college: "",
   });
 
+  // Prefill from URL params
   const urlPrefill = useMemo(() => {
     if (typeof window === "undefined") return {};
     const params = new URLSearchParams(window.location.search);
@@ -29,16 +30,16 @@ const CtaSection = ({ silent = false, goHomeOnClose = true, homePath = "/" }) =>
     };
   }, []);
 
-  // Auto-fill from backend > localStorage > URL
+  // Load data from localStorage and backend
   useEffect(() => {
     const fillData = async () => {
       let merged = { ...urlPrefill };
 
-      // localStorage
+      // From localStorage
       const saved = localStorage.getItem("userFormData");
       if (saved) merged = { ...merged, ...JSON.parse(saved) };
 
-      // backend (highest priority)
+      // From backend if phone number exists
       if (merged.number) {
         try {
           const res = await fetch(`${API_URL}/${encodeURIComponent(merged.number)}`);
@@ -68,7 +69,7 @@ const CtaSection = ({ silent = false, goHomeOnClose = true, homePath = "/" }) =>
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: payload.name, number: payload.number }),
+        body: JSON.stringify(payload),
       });
       if (res.ok) {
         console.log("Data Submitted");
@@ -83,11 +84,15 @@ const CtaSection = ({ silent = false, goHomeOnClose = true, homePath = "/" }) =>
 
   const handleSubmit = async (e, auto = false) => {
     if (e) e.preventDefault();
+    if (hasSubmittedRef.current) return; // prevent duplicates
+
     const { name, number, course, college } = formData;
     if (!name || !number) return;
+
     await submitToBackend({ name, number, course, college });
+
     if (!auto && !silent) {
-      // Optionally show a success message
+      // Optional: success toast
     }
   };
 
@@ -97,7 +102,7 @@ const CtaSection = ({ silent = false, goHomeOnClose = true, homePath = "/" }) =>
     if (goHomeOnClose) navigate(homePath);
   };
 
-  // Submit once on first scroll
+  // Auto-submit on scroll (only once)
   useEffect(() => {
     const onScroll = async () => {
       if (hasSubmittedRef.current) return;
@@ -108,6 +113,13 @@ const CtaSection = ({ silent = false, goHomeOnClose = true, homePath = "/" }) =>
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [formData]);
+
+  // Auto-submit if silent mode
+  useEffect(() => {
+    if (silent && formData.name && formData.number && !hasSubmittedRef.current) {
+      handleSubmit(null, true);
+    }
+  }, [silent, formData]);
 
   if (loading) return null;
   if (silent) return null;
