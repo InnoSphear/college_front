@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { BsWhatsapp } from "react-icons/bs";
 import { TbPhoneCalling } from "react-icons/tb";
 import { FaBars, FaTimes } from "react-icons/fa";
-
+import logo from '/logo.png'
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -14,7 +14,7 @@ const NavBar = () => {
   return (
     <nav className='py-4 px-4 md:px-6 md:ml-24 flex items-center justify-between'>
       <Link to='/'>
-        <img className='w-16 md:w-20' src="https://collegesuggest.com/_next/image?url=%2Fassets%2Fimages%2Flogo.webp&w=256&q=75" alt="Logo" />
+        <img className='w-12 md:w-20' src={logo} alt="Logo" />
       </Link>
 
       <div className='md:hidden'>
