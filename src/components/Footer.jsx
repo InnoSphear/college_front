@@ -60,7 +60,10 @@ const Footer = () => {
 
       {/* Bottom copyright */}
       <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm">
-        2024 © <Link to="/admin" className="hover:text-blue-400">digibuddy.in</Link>, All Rights Reserved.
+        2024 © <Link to="/admin">
+          digibuddy.in 
+        </Link>
+        , All Rights Reserved.
       </div>
     </footer>
   );
