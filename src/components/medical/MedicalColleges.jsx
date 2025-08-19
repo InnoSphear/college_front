@@ -285,8 +285,8 @@ const CollegeCard = ({ college, onClick }) => {
               <span>Established:{college.established || 'N/A'}</span>
             </div>
           </div>
-          <Link to='/connect'>
-            <button 
+          <Link>
+          <button 
             className="text-blue-600 hover:text-blue-800 font-medium text-sm sm:text-base px-3 py-1.5 cursor-pointer rounded-md hover:bg-blue-400 transition-colors"
            
           >

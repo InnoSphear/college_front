@@ -10,7 +10,7 @@ const HomePage = () => {
       <Homebanner/>
       <ExploreByStream/>
       <MedicalFieldsSection/>
-      <CtaSection silent />
+      <CtaSection silent={true} />
     </div>
   )
 }

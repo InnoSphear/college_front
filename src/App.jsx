@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import NavBar from './components/NavBar';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -14,8 +14,12 @@ import MedicalTopTenPvt from './pages/MedicalTopTenPvt';
 import Pharma from './pages/Pharma';
 import PharmaTopTenGov from './pages/PharmaTopTenGov';
 import PharmaTopTenPvt from './pages/PharmaTopTenPvt';
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
 
 const App = () => {
+   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   return (
     <div>
       <NavBar />
@@ -32,6 +36,26 @@ const App = () => {
         <Route path="/pharma" element={<Pharma />} /> 
         <Route path="/pharmatoptengov" element={<PharmaTopTenGov />} /> 
         <Route path="/pharmatoptenpvt" element={<PharmaTopTenPvt />} /> 
+        <Route
+          path="/admin"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/dashboard" />
+            ) : (
+              <Login setIsAuthenticated={setIsAuthenticated} />
+            )
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            isAuthenticated ? (
+              <Dashboard />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
       </Routes>
       <Footer />
     </div>

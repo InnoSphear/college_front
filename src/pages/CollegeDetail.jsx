@@ -142,7 +142,7 @@ const CollegeDetail = () => {
               <div className="flex items-center space-x-3">
                 <Link to="/connect">
                   <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-white">
-                    Click For Fees
+                    Download Broucher
                   </button>
                 </Link>
                 <Link to="/connect">
